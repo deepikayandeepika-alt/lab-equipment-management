@@ -1,11 +1,8 @@
-// ========================================
-// LAB EQUIPMENT MANAGEMENT SYSTEM
-// ========================================
 
-// Store all equipment records
+
 let equipmentData = [];
 
-// Get HTML elements
+
 const totalRecords = document.getElementById("totalRecords");
 const issuedRecords = document.getElementById("issuedRecords");
 const serviceDueRecords = document.getElementById("serviceDueRecords");
@@ -13,6 +10,7 @@ const damagedRecords = document.getElementById("damagedRecords");
 
 const searchInput = document.getElementById("searchInput");
 const filterSelect = document.getElementById("filterSelect");
+const sortSelect = document.getElementById("sortSelect");
 
 const recordCount = document.getElementById("recordCount");
 
@@ -28,9 +26,7 @@ const detailContent = document.getElementById("detailContent");
 const backButton = document.getElementById("backButton");
 
 
-// ========================================
-// LOAD DATA FROM JSON FILE
-// ========================================
+
 
 async function loadEquipmentData() {
 
@@ -121,23 +117,21 @@ function updateSummary() {
 }
 
 
-// ========================================
-// DISPLAY RECORDS
-// ========================================
+
 
 function displayRecords() {
 
-    // Get search value
+    
     const searchText = searchInput.value.toLowerCase().trim();
 
-    // Get selected filter
+    
     const selectedFilter = filterSelect.value;
 
 
-    // Filter records
+    
     const filteredRecords = equipmentData.filter(record => {
 
-        // Search across important fields
+        
         const matchesSearch =
 
             (record.equipment_name || "")
@@ -157,11 +151,9 @@ function displayRecords() {
                 .includes(searchText);
 
 
-        // Filter logic
         let matchesFilter = true;
 
 
-        // Currently issued
         if (selectedFilter === "issued") {
 
             matchesFilter = record.return_date === "";
@@ -212,9 +204,7 @@ function displayRecords() {
 
     });
 
-
-    // Update record count
-    recordCount.textContent =
+        recordCount.textContent =
         `Showing ${filteredRecords.length} of ${equipmentData.length} records`;
 
 
@@ -266,11 +256,42 @@ function displayRecords() {
         }
 
 
-        // Determine service status
+        // ========================================
+// CALCULATE DAYS OVERDUE
+// ========================================
+
+function getDaysOverdue(record) {
+
+    // No service date
+    if (!record.next_service_date) {
+        return null;
+    }
+
+    const today = new Date();
+
+    const serviceDate =
+        new Date(record.next_service_date);
+
+
+    if (isNaN(serviceDate.getTime())) {
+        return null;
+    }
+
+  
+    if (serviceDate >= today) {
+        return null;
+    }
+
+    return calculateDaysDifference(
+        serviceDate,
+        today
+    );
+
+}
         let serviceStatus = getServiceStatus(record);
 
 
-        // Create row
+      
         row.innerHTML = `
 
             <td>
@@ -302,11 +323,19 @@ function displayRecords() {
             </td>
 
             <td>
-                ${serviceStatus}
-            </td>
+    ${serviceStatus}
+</td>
 
-            <td>
-                <button
+<td>
+    ${
+        getDaysOverdue(record) === null
+            ? "no data"
+            : getDaysOverdue(record)
+    }
+</td>
+
+<td>
+    <button
                     class="view-button"
                     onclick="showDetails('${record.record_id}')"
                 >
@@ -325,13 +354,11 @@ function displayRecords() {
 }
 
 
-// ========================================
-// SERVICE STATUS
-// ========================================
+//
 
 function getServiceStatus(record) {
 
-    // Missing service date
+   
     if (!record.next_service_date) {
 
         return `
@@ -629,7 +656,10 @@ filterSelect.addEventListener(
     "change",
     displayRecords
 );
-
+sortSelect.addEventListener(
+    "change",
+    displayRecords
+);
 
 
 

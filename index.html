@@ -47,35 +47,42 @@
             </div>
 
         </section>
-
-
-        <!-- Search and Filter -->
+         
         <section class="controls">
 
-            <div class="search-box">
-                <label for="searchInput">Search Equipment</label>
+    <div class="search-box">
+        <label for="searchInput">Search Equipment</label>
 
-                <input
-                    type="text"
-                    id="searchInput"
-                    placeholder="Search by equipment, ID or person..."
-                >
-            </div>
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by equipment, ID or person..."
+        >
+    </div>
 
+    <div class="filter-box">
+        <label for="filterSelect">Filter Records</label>
 
-            <div class="filter-box">
-                <label for="filterSelect">Filter Records</label>
+        <select id="filterSelect">
+            <option value="all">All Records</option>
+            <option value="issued">Currently Issued</option>
+            <option value="returned">Returned</option>
+            <option value="damaged">Damaged</option>
+            <option value="serviceDue">Service Due</option>
+        </select>
+    </div>
 
-                <select id="filterSelect">
-                    <option value="all">All Records</option>
-                    <option value="issued">Currently Issued</option>
-                    <option value="returned">Returned</option>
-                    <option value="damaged">Damaged</option>
-                    <option value="serviceDue">Service Due</option>
-                </select>
-            </div>
+    <div class="filter-box">
+        <label for="sortSelect">Sort by Days Overdue</label>
 
-        </section>
+        <select id="sortSelect">
+            <option value="none">Default Order</option>
+            <option value="ascending">Days Overdue: Low to High</option>
+            <option value="descending">Days Overdue: High to Low</option>
+        </select>
+    </div>
+
+</section>
 
 
         <!-- Record Count -->
@@ -116,6 +123,7 @@
                         <th>Return Date</th>
                         <th>Condition</th>
                         <th>Service Status</th>
+                        <th>Days Overdue</th>
                         <th>Action</th>
                     </tr>
                 </thead>
